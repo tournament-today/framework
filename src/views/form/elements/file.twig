@@ -1,0 +1,14 @@
+{% set icon = 'file' %}
+{% extends "framework::form.elements.text" %}
+
+    {% block input_definition %}
+        <input
+                id="{{ name }}"
+                type="file"
+                class="form-control"
+                name='{{ name }}'
+                {% if 'required' in validation %}required{% endif %}
+                {% if input_old(name) %}value="{{ input_old(name)|default('') }}"{% endif %}
+                {% if 'disabled' in validation %}disabled{% endif %}
+                >
+    {% endblock %}

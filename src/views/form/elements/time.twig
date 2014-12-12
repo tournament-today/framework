@@ -1,0 +1,17 @@
+{% set icon = 'time' %}
+{% extends "framework::form.elements.text" %}
+
+    {% block input_definition %}
+        <div class="bootstrap-timepicker">
+        <input
+                id="{{ name }}"
+                type="{% if name in ['password','password_repeat'] %}password{% else %}text{% endif %}"
+                class="form-control timepicker"
+                name='{{ name }}'
+                {% if 'required' in validation %}required{% endif %}
+                {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+                {% if input_old(name) %}value="{{ input_old(name)|default('') }}"{% endif %}
+                {% if 'disabled' in validation %}disabled{% endif %}
+                >
+        </div>
+    {% endblock %}

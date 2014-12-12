@@ -1,0 +1,14 @@
+
+{% import "macros.panel" as panel %}
+
+        </div>
+        <div class="panel-footer">
+            <input
+                class="btn btn-primary"
+                type="submit"
+                name="{{ model.classBaseName|snake_case }}-{% if model.exists %}edit{% else %}create{% endif %}"
+                value="{{ trans(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-' ~ (model.exists ? 'edit' : 'create')) }}"
+                />
+        </div>
+    </div>
+{{ form_close() }}

@@ -1,0 +1,40 @@
+{% extends "framework::form.abstracts.group" %}
+
+{% if icon|default(null) is sameas(null) and view_exists('icons.' ~ name) %}
+    {% set icon = name %}
+{% endif %}
+
+{% block input %}
+    {% if icon %}
+        <div class="input-group mb15">
+        <span class="input-group-addon">{% include "icons." ~ icon %}</span>
+    {% endif %}
+    {% block input_definition %}
+    <input
+            id="{{ name }}"
+            type="{% if name in ['password','password_repeat'] %}password{% else %}text{% endif %}"
+            class="form-control{% block extra_class %}{% endblock %}"
+            name='{{ name }}'
+            {% if 'required' in validation %}required{% endif %}
+            {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+            {% if input_old(name) or attribute(model, name) %}value="{{ input_old(name)|default(attribute(model, name)) }}"{% endif %}
+            {% if 'disabled' in validation %}disabled{% endif %}
+            >
+    {% endblock %}
+    {% if icon %}
+        </div>
+    {% endif %}
+    {% block help %}
+        {% if error or help or trans_has(model.classBaseName|snake_case ~ '.' ~ name ~ '-help') %}
+            <span for="{{ name }}" class="help-block">
+                {% if error %}
+                    {{ error|default(help) }}
+                {% elseif trans_has(model.classBaseName|snake_case ~ '.' ~ name ~ '-help') %}
+                    {{ trans(model.classBaseName|snake_case ~ '.' ~ name ~ '-help') }}
+                {% else %}
+                    {{ help }}
+                {% endif %}
+            </span>
+        {% endif %}
+    {% endblock %}
+{% endblock %}

@@ -1,0 +1,37 @@
+{% set icon = 'select' %}
+{% extends "framework::form.elements.text" %}
+
+    {% block input_definition %}
+        <select
+            name="{{ name }}"
+            class="select2"
+            {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+            >
+            {% for option in model.getSelectValues(name) %}
+                {% if option.imageUri %}
+                <option
+                    data-name="{{ option.name }}"
+                    value="{{ option.id }}"
+                    data-image="{{ option.imageUri }}"
+
+                    {% if input_old(name) == option.id or attribute(model, name) == option.id %}selected="selected"{% endif %}
+                    >
+                    {{ option.name }}
+                </option>
+                {% endif %}
+            {% endfor %}
+        </select>
+{#
+            <input
+                    id="{{ name }}"
+                    type="{% if name in ['password','password_repeat'] %}password{% else %}text{% endif %}"
+                    class="form-control timepicker"
+                    name='{{ name }}'
+                    {% if 'required' in validation %}required{% endif %}
+                    {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+                    {% if input_old(name) %}value="{{ input_old(name)|default('') }}"{% endif %}
+                    {% if 'disabled' in validation %}disabled{% endif %}
+                    >
+        </div>
+#}
+    {% endblock %}

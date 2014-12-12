@@ -1,0 +1,20 @@
+{% set icon = 'select' %}
+{% extends "framework::form.elements.text" %}
+
+    {% block input_definition %}
+        <select
+            name="{{ name }}"
+            class="form-control"
+            >
+            {% if 'required' not in validation %}
+                <option value>{{ trans('generic.optional-choice') }}</option>
+            {% endif %}
+            {% for option in model.getSelectValues(name) %}
+                {{ dump(option.id) }}
+                <option
+                    value="{{ option.id }}"
+                    {% if input_old(name) == option.id or (model.exists and attribute(model, name) == option.id) %}selected="selected"{% endif %}
+                    >{{ option.name }}</option>
+            {% endfor %}
+        </select>
+    {% endblock %}

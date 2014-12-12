@@ -1,0 +1,17 @@
+{% set icon = 'text' %}
+{% extends "framework::form.elements.text" %}
+
+    {% block input_definition %}
+        <textarea
+                id="{{ name }}"
+                class="form-control wysiwyg"
+                name='{{ name }}'
+                {% if 'required' in validation %}required{% endif %}
+                {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+                {% if 'disabled' in validation %}disabled{% endif %}
+                >
+            {% if input_old(name) or attribute(model, name) %}
+                {{ input_old(name)|default(attribute(model, name)) }}
+            {% endif %}
+        </textarea>
+    {% endblock %}

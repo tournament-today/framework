@@ -1,0 +1,20 @@
+{% extends "framework::form.abstracts.group" %}
+
+{% block input %}
+    <div
+        for="{{ name }}_toggle"
+        class="toggle toggle-{{ class|default('primary') }}"
+        {% if (input_old() and input_old(name) == '1') or (input_old() is sameas([]) and attribute(model, name) == '1') %}data-toggled{% endif %}
+        ></div>
+
+    <input
+        type="hidden"
+        name="{{ name }}"
+        value="{% if (input_old() and input_old(name) == '1') or (input_old() is sameas([]) and attribute(model, name) == '1') %}1{% else %}0{% endif %}"
+        />
+    {% if trans_has(model.classBaseName|snake_case ~ '.' ~ name ~ '-help') %}
+        <p class="help-block">
+            {{ trans(model.classBaseName|snake_case ~ '.' ~ name ~ '-help') }}
+        </p>
+    {% endif %}
+{% endblock %}

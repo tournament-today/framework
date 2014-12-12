@@ -1,0 +1,35 @@
+{% extends "framework::form.abstracts.group" %}
+
+{% block label_text_append %}
+    <span class="pull-right badge badge-primary data-slider-value-display-{{ name }}">{{ input_old(name)|default(default)|default(model.getValidationValue(name, 'min:(?<value>[0-9]+)')|default(0)) }}</span>
+{% endblock %}
+
+{% block input %}
+
+            <input
+                type="hidden"
+                name="{{ name }}"
+                value="{{ input_old(name)|default(default)|default(model.getValidationValue(name, 'min:(?<value>[0-9]+)')|default(0)) }}"
+            />
+            <div
+                    id="{{ name }}_range"
+                    data-input-type="range"
+                    data-input-for="{{ name }}"
+                    data-min="{{ model.getValidationValue(name, 'min:(?<value>[-0-9]+)')|default(0) }}"
+                    data-max="{{ model.getValidationValue(name, 'max:(?<value>[-0-9]+)')|default(10) }}"
+                    {% if input_old(name) or attribute(model, name) %}data-value="{{ input_old(name)|default(attribute(model,name)) }}"{% endif %}
+                    {% if 'disabled' in validation %}data-disabled{% endif %}
+                    >
+            </div>
+    {% if error or help or trans_has(model.classBaseName|snake_case ~ '.' ~ name ~ '-help') %}
+        <div for="{{ name }}" class="help-block">
+            {% if error %}
+                {{ error|default(help) }}
+            {% elseif trans_has(model.classBaseName|snake_case ~ '.' ~ name ~ '-help') %}
+                {{ trans(model.classBaseName|snake_case ~ '.' ~ name ~ '-help') }}
+            {% else %}
+                {{ help }}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

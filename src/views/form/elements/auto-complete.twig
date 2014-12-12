@@ -1,0 +1,17 @@
+{% set icon = 'select' %}
+{% extends "framework::form.elements.text" %}
+
+    {% block input_definition %}
+        <input
+            type="hidden"
+            name="{{ name }}"
+            class="auto-complete form-control"
+            {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+            data-auto-complete-url="{{ route(model.getSelectValues(name)[0]) }}"
+            {% if 'disabled' in validation %}disabled{% endif %}
+            {# cannot interpret the id's to the actual tagged names, therefor value is disabled #}
+            {#{% if input_old(name) %}value="{{ input_old(name) }}"{% endif %}#}
+            data-min="{{ model.getValidationValue(name, 'min:(?<value>[-0-9]+)')|default('') }}"
+            data-max="{{ model.getValidationValue(name, 'max:(?<value>[-0-9]+)')|default('') }}"
+            />
+    {% endblock %}

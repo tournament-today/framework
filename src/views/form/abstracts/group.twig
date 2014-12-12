@@ -1,0 +1,22 @@
+<div class="form-group{% if error %} has-error{% endif %}">
+    {% block label %}
+        <label class="col-sm-4 control-label">
+            {% block label_text_prepend %}{% endblock %}
+            {% block label_text %}
+                {% if label %}
+                    {{ label }}
+                {% elseif trans_has(model.classBaseName|snake_case ~ '.' ~ name ~ '-label') %}
+                    {{ trans(model.classBaseName|snake_case ~ '.' ~ name ~ '-label')|capitalize }}
+                {% else %}
+                    <span class="hide">
+                        {{ model.classBaseName|snake_case ~ '.' ~ name ~ '-label' }}
+                    </span>
+                {% endif %}
+            {% endblock %}
+            {% block label_text_append %}{% endblock %}
+        </label>
+    {% endblock %}
+    <div class="col-sm-7">
+        {% block input %}{{ input }}{% endblock %}
+    </div>
+</div>

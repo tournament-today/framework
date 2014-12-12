@@ -1,0 +1,14 @@
+{% set icon = 'time' %}
+{% extends "framework::form.elements.text" %}
+
+    {% block input_definition %}
+        <input
+                id="{{ name }}"
+                type="text"
+                class="form-control"
+                name='{{ name }}'
+                {% if 'required' in validation %}required{% endif %}
+                placeholder="{{ trans('generic.datetime-placeholder') }}"
+                {% if input_old(name) or attribute(model, name) %}value="{{ input_old(name)|default(attribute(model, name)) }}"{% endif %}
+                >
+    {% endblock %}
