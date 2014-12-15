@@ -97,6 +97,14 @@ abstract class Model extends BaseModel
 		return $this -> linkRoute("{$this->classBaseName}@edit");
 	}
 	/**
+	 * Generates a complete url based on the current class to a delete
+	 * @return string
+	 */
+	public function getLinkDeleteAttribute()
+	{
+		return $this -> linkRoute("{$this->classBaseName}@delete");
+	}
+	/**
 	 * Generates a complete url based on the current class to a edit
 	 * @return string
 	 */

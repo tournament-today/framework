@@ -5,23 +5,14 @@ use View, Session;
 
 class FormGenerator
 {
+	public function input($type, $params = [])
+	{
+		return $this -> view($type, array_merge(compact('type'), $params));
+	}
 
-	public function open($id = null, $method = 'post', $action = null, $class = null)
-	{
-		$token = Session::token();
-		return $this -> view('open', compact('id', 'method', 'action', 'class', 'token'));
-	}
-	public function text($name, $placeholder = null, $default = null, $icon = null, $error = null, $validation = null, $help = null)
-	{
-		return $this -> view('text', compact('name', 'placeholder', 'default', 'icon', 'error', 'validation', 'help'));
-	}
-	public function checkbox()
-	{
-
-	}
 	public function close()
 	{
-
+		return $this -> view('close');
 	}
 	/**
 	 * @param $method
@@ -34,6 +25,9 @@ class FormGenerator
 		// fallback on existing methods, eg for overruling etc.
 		if(method_exists($this, $method))
 			return call_user_func_array([$this, $method], $arguments);
+		// catch a method like ->wysiwyg(.., ..)
+		elseif(View::exists("framework::form.elements.{$method}"))
+			return $this -> input($method, $arguments);
 		else
 			throw new MissingFormTemplateException("No method for element {$method} found");
 	}
@@ -53,6 +47,6 @@ class FormGenerator
 		elseif(View::exists("framework::form.elements.{$template}"))
 			return view("framework::form.elements.{$template}", $params);
 		else
-			throw new MissingFormTemplateException("No template for element {$method} found");
+			throw new MissingFormTemplateException("No template for element {$template} found");
 	}
 }
