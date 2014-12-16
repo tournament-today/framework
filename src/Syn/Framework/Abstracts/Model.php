@@ -399,4 +399,9 @@ abstract class Model extends BaseModel
 	{
 		return App::make('Sentinel');
 	}
+
+	public function getTranslatePrefixAttribute()
+	{
+		return snake_case($this->classBaseName) . '.' . snake_case($this->classBaseName);
+	}
 }

@@ -1,7 +1,9 @@
 
 {% import "macros.panel" as panel %}
 
-{% if   (model.exists and trans_has(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-edit'))
+{% if action and trans_has(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-' ~ action) %}
+    {% set title = trans(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-' ~ action) %}
+{% elseif   (model.exists and trans_has(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-edit'))
     or (model.exists is sameas(false) and trans_has(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-create')) %}
         {% set title = trans(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-' ~ (model.exists ? 'edit' : 'create')) %}
 {% endif %}
@@ -9,8 +11,15 @@
     {% set description = trans(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-' ~ (model.exists ? 'edit' : 'create') ~ '-description') %}
 {% endif %}
 
+{% if action and trans_has(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-' ~ action ~ '-description') %}
+    {% set description = trans(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-' ~ action ~ '-description') %}
+{% endif %}
+
+{% if class is sameas(null) and action and action == 'delete' %}
+    {% set class = "danger" %}
+{% endif %}
 
 {{ form_open({'id': id|default('form'), 'class': 'form-horizontal form-bordered', 'enctype': 'multipart/form-data'}) }}
     {# allow upload size of 5MB #}
     {{ form_hidden('MAX_FILE_SIZE', 5120000) }}
-        {{ panel.open(title, description, width|default(12), true) }}
+        {{ panel.open(title, description, width|default(12), true, class) }}

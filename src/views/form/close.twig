@@ -3,11 +3,14 @@
 
         </div>
         <div class="panel-footer">
+            <a
+                class="btn btn-default"
+                href="{{ url_previous() }}">{{ trans('generic.cancel') }}</a>
             <input
-                class="btn btn-primary"
+                class="btn btn-{% if action in ['delete'] %}danger{% else %}primary{% endif %}"
                 type="submit"
-                name="{{ model.classBaseName|snake_case }}-{% if model.exists %}edit{% else %}create{% endif %}"
-                value="{{ trans(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-' ~ (model.exists ? 'edit' : 'create')) }}"
+                name="{{ model.classBaseName|snake_case }}-{% if action %}{{ action }}{% else %}{% if model.exists %}edit{% else %}create{% endif %}{% endif %}"
+                value="{% if action %}{{ trans(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-' ~ action ) }}{% else %}{{ trans(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-' ~ (model.exists ? 'edit' : 'create')) }}{% endif %}"
                 />
         </div>
     </div>

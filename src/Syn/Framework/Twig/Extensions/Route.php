@@ -36,6 +36,15 @@ class Route extends Twig_Extension
 					return call_user_func_array(['Route', $name], $arguments);
 				}
 			),
+			new Twig_SimpleFunction(
+				'url_*',
+				function ($name) {
+					$arguments = array_slice(func_get_args(), 1);
+					$name      = Str::camel($name);
+
+					return call_user_func_array(['URL', $name], $arguments);
+				}
+			),
 		];
 	}
 }

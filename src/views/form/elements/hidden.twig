@@ -1,0 +1,9 @@
+
+    {% block input_definition %}
+    <input
+            id="{{ name }}"
+            type="hidden"
+            name='{{ name }}'
+            {% if input_old(name) or attribute(model, name) %}value="{{ input_old(name)|default(attribute(model, name)) }}"{% endif %}
+            >
+    {% endblock %}

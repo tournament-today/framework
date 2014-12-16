@@ -132,7 +132,8 @@ abstract class Controller extends BaseController
 		if(!$model->allowDelete())
 			return $this->notAllowed("delete {$name}", 'insufficient rights');
 
-		$this -> title = trans('generic.delete-form-description',['name'=> $name]);
+		$this -> title = trans($model->translatePrefix . '-form-delete');
+
 		return $this->onRequestMethod('post', function() use ($model)
 		{
 			$model->delete();

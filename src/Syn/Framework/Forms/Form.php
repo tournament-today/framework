@@ -2,7 +2,10 @@
 
 use Session;
 use Syn\Framework\Abstracts\Model;
+use Syn\Framework\Exceptions\MissingConfigurationException;
+use Syn\Framework\Exceptions\MissingImplementationException;
 use Syn\Framework\Interfaces\FormGeneratorInterface;
+use Validator;
 
 class Form
 {
@@ -34,6 +37,14 @@ class Form
 	protected $_model;
 
 	/**
+	 * The action to execute
+	 * @var string
+	 */
+	protected $_action = "save";
+
+	protected $_possible_actions = ['save', 'delete'];
+
+	/**
 	 * Form generator instance
 	 * @var
 	 */
@@ -43,6 +54,7 @@ class Form
 	 * @param Model $model
 	 * @param array $columns
 	 * @param array $options
+	 * @throws \Syn\Framework\Exceptions\MissingImplementationException
 	 */
 	public function __construct(Model $model = null, $columns = [], $options = [])
 	{
@@ -50,8 +62,28 @@ class Form
 		$this -> _columns = $columns;
 		$this -> _options = $options;
 
+		if(array_get($options, 'action') && in_array(array_get($options, 'action'), $this->_possible_actions))
+			$this -> _action = array_get($options, 'action');
+		elseif(array_get($options, 'action'))
+			throw new MissingImplementationException("Unknown action");
+
 		$this -> _generator = new FormGenerator();
 
+	}
+
+	/**
+	 *
+	 */
+	public function getValidator()
+	{
+		// use the model validator
+		if($this->_model)
+			return $this->_model->getValidator($this->_model->getAttributes(), $this->_columns);
+		// otherwise construct a new validator
+		if(array_get($this->_options, 'validation'))
+			return Validator::make($this->_columns, array_get($this->_options, 'validation'));
+
+		throw new MissingConfigurationException("Cannot get Validator for form");
 	}
 
 	/**
