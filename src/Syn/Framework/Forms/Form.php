@@ -2,6 +2,7 @@
 
 use Session;
 use Syn\Framework\Abstracts\Model;
+use Syn\Framework\Interfaces\FormGeneratorInterface;
 
 class Form
 {
@@ -33,6 +34,12 @@ class Form
 	protected $_model;
 
 	/**
+	 * Form generator instance
+	 * @var
+	 */
+	protected $_generator;
+
+	/**
 	 * @param Model $model
 	 * @param array $columns
 	 * @param array $options
@@ -43,8 +50,26 @@ class Form
 		$this -> _columns = $columns;
 		$this -> _options = $options;
 
-		$this -> generator = new FormGenerator();
+		$this -> _generator = new FormGenerator();
 
+	}
+
+	/**
+	 * Sets the form generator
+	 * @param FormGeneratorInterface $generator
+	 */
+	public function setFormGenerator(FormGeneratorInterface $generator)
+	{
+		$this -> _generator = $generator;
+	}
+
+	/**
+	 * Gets the form generator
+	 * @return FormGenerator
+	 */
+	public function getFormGenerator()
+	{
+		return $this -> _generator;
 	}
 
 	/**

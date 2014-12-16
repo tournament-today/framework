@@ -1,18 +1,14 @@
 <?php namespace Syn\Framework\Forms;
 
 use Syn\Framework\Exceptions\MissingFormTemplateException;
+use Syn\Framework\Interfaces\FormGeneratorInterface;
 use View, Session;
 
-class FormGenerator
+class FormGenerator implements FormGeneratorInterface
 {
 	public function input($type, $params = [])
 	{
 		return $this -> view($type, array_merge(compact('type'), $params));
-	}
-
-	public function close()
-	{
-		return $this -> view('close');
 	}
 	/**
 	 * @param $method
