@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="{{ app.locale }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Luceos &amp; the tournament today team">
+
+    <title>{% if title %}{{ title|lower }} &middot; {% endif %}tournament.today</title>
+
+    <link href="/css/application.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/templates/{{ template }}/js/html5shiv.js"></script>
+    <script src="/templates/{{ template }}/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+{% import "macros.menu" as menu %}
+{% import "macros.gamer" as gamerMacro %}
+{% import "macros.panel" as panelMacro %}
+
+<body class="{% block body_class %}{% endblock %}">
+    {% block page %}
+    <div class="page-container">
+        {% block sidebar %}
+        <div class="page-sidebar">
+            <ul class="x-navigation">
+                <li class="xn-logo-xx">
+                    <a href="{{ route('home') }}">
+                        tournament today
+                    </a>
+                    <a href="#" class="x-navigation-control"></a>
+                </li>
+                {% if Visitor.exists %}
+                <li class="xn-profile">
+                        <div class="profile">
+                            {{ gamerMacro.avatar(Visitor) }}
+                            <div class="profile-data">
+                                <div class="profile-data-name">{{ Visitor.publishedName }}</div>
+                            </div>
+                            <div class="profile-controls">
+                                <a href="{{ Visitor.linkView }}" class="profile-control-left">
+                                    {% include "icons.info" %}
+                                </a>
+                                <a href="#" class="profile-control-right">
+                                    {% include "icons.undefined" %}
+                                </a>
+                            </div>
+                        </div>
+                </li>
+                {% endif %}
+                {% block navigation %}
+                <li class="xn-title">Navigation</li>
+                {{ menu.item('home', null, trans('menu.home')|capitalize, 'home') }}
+
+
+                {% if Visitor.exists %}
+                    {{ menu.item(null, null, trans_choice('gamer.gamer',1)|capitalize, 'account', [
+                        menu.child(Visitor.linkView, null, trans('gamer.your-profile')|capitalize, 'account'),
+                        menu.child(Visitor.linkEdit, null, trans('gamer.edit-your-profile')|capitalize, 'account'),
+                        menu.child('sign-out', null, trans('menu.sign-out')|capitalize, 'sign-out')
+                    ]) }}
+
+                {% else %}
+                    {{ menu.item('sign-in', null, trans('menu.sign-in')|capitalize, 'sign-in') }}
+                    {{ menu.item('sign-up', null, trans('menu.sign-up')|capitalize, 'sign-up') }}
+                {% endif %}
+                {# change this to allow access to cups #}
+                {% if Visitor.admin %}
+                {{ menu.item(null, null, trans_choice('clan.clan',2)|capitalize, 'clan',
+                [
+                    Visitor.exists ? menu.child('Gamer@clans', {'id': Visitor.id, 'name': Visitor.linkName}, trans('clan.your-clans')|capitalize, 'clan') : null,
+                    Visitor.exists ? menu.child('Clan@create', null, trans('clan.clan-form-create')|capitalize, 'clan') : null,
+                    menu.item('Clan@index', null, trans_choice('clan.clan',2)|capitalize, 'clan')
+                ]) }}
+                {{ menu.item(null, null, trans_choice('cup.cup',2)|capitalize, 'cup',
+                [
+                    Visitor.admin ? menu.item('Cup@create', null, trans('cup.cup-form-create')|capitalize, 'cup') : null,
+                    menu.item('Cup@list', null, trans_choice('cup.cup',2)|capitalize, 'cup')
+                ]) }}
+                {% endif %}
+                {% if Visitor.admin %}
+
+                    {{ menu.item(null, null, 'Admin', 'admin',
+                    [
+                    menu.item('CompetitionType@list', null, trans_choice('competition_type.competition-type',2)|capitalize, 'cup'),                            menu.item('CompetitionType@create', null, trans('competition_type.competition_type-form-create'), 'cup')
+                    ]
+                    ) }}
+                {% endif %}
+                {% endblock %}
+                <li class="xn-title">Proudly powered by</li>
+                <li>
+                    <div class="text-center">
+                        <a href="http://pusher.com" target="_blank">
+                            <img src="/media/pusher/logo-dark.png" width="150px" />
+                        </a>
+                        <a href="http://cloud.google.com" target="_blank">
+                            <img src="/media/google/gcp.png" width="150px" />
+                        </a>
+                        <a href="http://digitalocean.com/?refcode=31d75db3fab2" target="_blank">
+                            <img src="https://www.digitalocean.com/assets/images/logos-badges/png/DO_Logo_Horizontal_White-118f4ee5.png" width="150px" />
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        {% endblock %}
+        {% block page_content %}
+        <div class="page-content">
+
+            <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
+                <li class="xn-icon-button">
+                    <a href="#" class="x-navigation-minimize"><span class="fa fa-dedent"></span></a>
+                </li>
+                {% block topnavigation %}
+                <li class="xn-icon-button pull-right">
+                    {% if Visitor.exists %}
+                        <a href="{{ route('sign-out') }}">
+                            {% include "icons.sign-out" %}
+                        </a>
+                    {% else %}
+                        <a href="{{ route('sign-in') }}">
+                            {% include "icons.sign-in" %}
+                        </a>
+                    {% endif %}
+                </li>
+                <li class="xn-icon-button pull-right">
+                    <a>
+                        {% include "icons.ws-sync-state" %}
+                    </a>
+                    <div class="informer informer-default" data-ws-sync-state data-ws-user-count>?</div>
+                    <div class="panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{% include "icons.ws-sync-state" %} {{ trans('socket.ws-menu-bar-count') }}</h3>
+                            <div class="pull-right">
+                                <span class="label label-default" data-ws-sync-state data-ws-user-count>?</span>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            {{ trans('socket.ws-menu-bar-count-description') }}
+                        </div>
+                    </div>
+                </li>
+                {% endblock %}
+            </ul>
+            {% block content_breadcrumbs %}
+            <ul class="breadcrumb">
+                <li><a href="{{ route('home') }}">{% include "icons.home" %}</a></li>
+                {% block breadcrumbs %}{% endblock %}
+                {% if title %}<li>{{ title }}</li>{% endif %}
+            </ul>
+            {% endblock %}
+
+            {% block content_title %}
+            <div class="page-title">
+                <h2><span class="fa fa-arrow-circle-o-left"></span> {{ title }}</h2>
+            </div>
+            {% endblock %}
+
+            {% if Visitor.exists and Visitor.email_verified is sameas(0) %}
+                {{ panelMacro.open(trans('gamer.email-not-verified-title'), null, null, null, 'danger') }}
+                    {{ trans('gamer.email-not-verified-body') }}
+                    {{ panelMacro.footer({
+                        'resend': {'class': 'primary', 'href': route('email-verify', {'gamer': Visitor.id, 'name': Visitor.linkName})}
+                    }) }}
+                {{ panelMacro.close() }}
+            {% endif %}
+
+            {% block content_wrap %}
+            <div class="page-content-wrap">
+                <div class="row">
+                    <div class="col-md-12">
+
+
+                        {% block content %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+
+        </div>
+        {% endblock %}
+
+    </div>
+    {% endblock %}
+
+    {% block footer_scripts %}
+    <script src="/templates/{{ template }}/js/plugins/jquery/jquery.min.js"></script>
+    <script src="/templates/{{ template }}/js/plugins/jquery/jquery-ui-custom.min.js"></script>
+    <script src="/templates/{{ template }}/js/plugins/bootstrap/bootstrap.min.js"></script>
+    <script type='text/javascript' src='/templates/{{ template }}/js/plugins/icheck/icheck.min.js'></script>
+    <script type="text/javascript" src="/templates/{{ template }}/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>
+    <script type="text/javascript" src="/templates/{{ template }}/js/plugins/scrolltotop/scrolltopcontrol.js"></script>
+
+    <script type="text/javascript" src="/templates/{{ template }}/js/plugins/morris/raphael-min.js"></script>
+    <script type="text/javascript" src="/templates/{{ template }}/js/plugins/morris/morris.min.js"></script>
+    <script type="text/javascript" src="/templates/{{ template }}/js/plugins/rickshaw/d3.v3.js"></script>
+    <script type="text/javascript" src="/templates/{{ template }}/js/plugins/rickshaw/rickshaw.min.js"></script>
+    <script type="text/javascript" src="/templates/{{ template }}/js/plugins/select2/select2.min.js"></script>
+    <script type="text/javascript" src="/templates/{{ template }}/js/plugins/toggles/toggles.min.js"></script>
+    <script type="text/javascript" src="/templates/{{ template }}/js/plugins/bootstrap-wizard/bootstrap-wizard.min.js"></script>
+    <script type="text/javascript" src="/templates/{{ template }}/js/plugins/summernote/summernote.js"></script>
+
+    <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
+    <script src="/js/application.js"></script>
+    {% if Visitor.exists %}
+    {% include "socket::client-js" %}
+    {% endif %}
+    {% endblock %}
+    {% block page_scripts %}{% endblock %}
+
+    {% block template_scripts %}
+    <script type="text/javascript" src="/templates/{{ template }}/js/plugins.js"></script>
+    <script type="text/javascript" src="/templates/{{ template }}/js/actions.js"></script>
+    {% endblock %}
+</body>
+</html>

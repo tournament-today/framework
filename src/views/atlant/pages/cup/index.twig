@@ -1,0 +1,47 @@
+{% extends "pages.directory" %}
+
+{% block fav_title %}
+    {{ trans_choice('cup.last_winner',2) }}
+{% endblock %}
+
+{% block fav_list %}
+{#
+    {% for membership in Visitor.memberships %}
+        <a href="{{ membership.clan.linkView }}" class="list-group-item">
+            <div class="media">
+                <div class="pull-left">
+                    <img class="img-circle img-offline" src="{{ membership.clan.logoUri|default("/templates/" ~ template ~ "/images/photos/user3.png") }}" alt="...">
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">{{ membership.clan.name }}</h4>
+                    <small>{{ membership.title.title }}</small>
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+    #}
+{% endblock %}
+
+{% block item %}
+
+    <a href="{{ item.linkView }}" class="list-group-item{% if item.visitorParticipates %} list-group-item-success{% endif %}">
+        <div class="media">
+            <div class="pull-left">
+                <img class="img-block img-{% if item.upcoming %}online{% else %}offline{% endif %}" src="{{ item.steamGame.imageUri|default("/templates/" ~ template ~ "/images/photos/user1.png") }}" alt="...">
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">{{ item.name }}</h4>
+                <div class="media-content">
+                    <ul class="list-unstyled">
+                        <li>{% include "icons.clan" %} {{ item.clan.name }}</li>
+                        <li>{% include "icons.calendar" %} {{ item.starts_at|tz }}</li>
+                        {# todo add you participated and you won etc. #}
+                        {% if item.visitorParticipates %}
+                            <li>{% include "icons.ok-checkbox" %} {{ trans('cup.you-participate') }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </a>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'pages.extendeable' %}
+
+
+{% import "macros.breadcrumb" as breadcrumb %}
+{% import "macros.form" as form %}
+{% import "macros.table" as table %}
+{% import "macros.panel" as panel %}
+
+{% block breadcrumbs %}
+    {{ breadcrumb.item(clanTitle.clan.name, clanTitle.clan.linkView) }}
+    {{ breadcrumb.item(trans('generic.edit'), clanTitle.clan.linkEdit) }}
+{% endblock %}
+
+{% block content %}
+    {% if clanTitle.exists %}
+        {{ form.open('edit-title', trans('clan.clan-edit-title'), trans('clan.clan-edit-title-description')) }}
+    {% else %}
+        {{ form.open('edit-title', trans('clan.clan-create-title'), trans('clan.clan-create-title-description')) }}
+    {% endif %}
+
+        {{ form.group(trans_choice('clan.title',1),
+            form.text('title', null, clanTitle.title, 'title', errors.first('title'), clanTitle._validation.title)) }}
+        {{ form.group(trans_choice('clan.leader',1),
+            form.toggle('leader', clanTitle.leader, 'danger', trans('clan.leader-description'))) }}
+        {{ form.group(trans_choice('clan.right-hand',1),
+            form.toggle('right_hand', clanTitle.right_hand, 'warning', trans('clan.right-hand-description'))) }}
+
+        {{ form.group(null,
+            form.toggle('manage_rights', clanTitle.manage_rights, 'primary', trans('clan.manage-rights'))) }}
+        {{ form.group(null,
+            form.toggle('manage_clan', clanTitle.manage_clan, 'primary', trans('clan.manage-clan'))) }}
+        {{ form.group(null,
+            form.toggle('manage_match_entry', clanTitle.manage_match_entry, 'primary', trans('clan.manage-match-entry'))) }}
+
+        {{ form.group(null,
+            form.toggle('manage_match_subscriptions', clanTitle.manage_match_subscriptions, 'primary', trans('clan.manage-match-subscriptions'))) }}
+
+        {{ form.group(null,
+            form.toggle('manage_own_match_subscription', clanTitle.manage_own_match_subscription, 'primary', trans('clan.manage-own-match-subscription'))) }}
+
+
+        {{ form.group(null,
+            form.toggle('manage_invite', clanTitle.manage_invite, 'primary', trans('clan.manage-invite'))) }}
+        {{ form.group(null,
+            form.toggle('manage_kick', clanTitle.manage_kick, 'primary', trans('clan.manage-kick'))) }}
+        {{ form.group(null,
+            form.toggle('manage_ban', clanTitle.manage_ban, 'primary', trans('clan.manage-ban'))) }}
+
+    {% if clanTitle.exists %}
+        {{ form.buttons(form.submit('edit-title', trans('clan.clan-edit-title'))) }}
+    {% else %}
+        {{ form.buttons(form.submit('edit-title', trans('clan.clan-create-title'))) }}
+    {% endif %}
+
+    {{ form.close() }}
+{% endblock %}

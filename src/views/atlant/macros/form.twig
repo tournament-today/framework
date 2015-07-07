@@ -1,0 +1,107 @@
+
+
+{% macro open(id, title, description, width) %}
+    {% import "macros.panel" as panel %}
+    {{ panel.open(title, description, width, true) }}
+    {{ form_open({'id': id|default('form'), 'class': 'form-horizontal form-bordered'}) }}
+{% endmacro %}
+
+{% macro close() %}
+    {% import "macros.panel" as panel %}
+            {{ form_close() }}
+    {{ panel.close() }}
+{% endmacro %}
+
+
+{% macro group(label, input, error) %}
+    <div class="form-group{% if error %} has-error{% endif %}">
+        {% if label %}
+        <label class="col-sm-4 control-label">{{ label }}</label>
+        {% endif %}
+        <div class="col-sm-8{% if label is sameas(null) %} col-sm-offset-4{% endif %}">
+            {{ input }}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro text(name, placeholder, default, icon, error, validation, help, disabled) %}
+    <!-- input.text for {{ name }} -->
+        {% if icon %}
+            <div class="input-group">
+            <span class="input-group-addon">{% include "icons." ~ icon %}</span>
+        {% endif %}
+        <input
+                id="{{ name }}"
+                type="{% if name in ['password','password_repeat'] %}password{% else %}text{% endif %}"
+                class="form-control"
+                name='{{ name }}'
+                {% if 'required' in validation %}required{% endif %}
+                {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+                {% if input_old(name) or default %}value="{{ input_old(name)|default(default) }}"{% endif %}
+                {% if disabled %}disabled{% endif %}
+                >
+        {% if icon %}
+            </div>
+        {% endif %}
+    {% if error or help %}
+        <span for="{{ name }}" class="help-block">
+            {{ error|default(help) }}
+        </span>
+    {% endif %}
+{% endmacro %}
+
+{% macro buttons(submit, reset) %}
+    <div class="panel-footer">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-4">
+                {% if submit %}
+                    {{ submit }}
+                {% endif %}
+                {% if reset %}
+                    {{ reset }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro submit(name, label) %}
+    <input type="submit" class="btn btn-primary mr5" name="{{ name }}" value="{{ label }}" />
+{% endmacro %}
+
+{% macro toggle(name, checked, class, help, error) %}
+    <div
+            for="{{ name }}_toggle"
+            class="toggle toggle-{{ class|default('primary') }}"
+            {% if (input_old() and input_old(name) == '1') or checked %}data-toggled{% endif %}
+            ></div>
+
+    <input
+            type="hidden"
+            name="{{ name }}"
+            value="{% if (input_old() and input_old(name) == '1') or checked %}1{% else %}0{% endif %}"
+            />
+    {% if error or help %}
+        <span for="{{ name }}" class="help-block">
+            {{ error|default(help) }}
+        </span>
+    {% endif %}
+    {#
+    <div for="{{ name }}" class="toggle toggle-{{ class|default('default') }}" {% if checked %}data-toggled{% endif %}></div>
+    <input class="hide" name="{{ name }}" type="checkbox" value="1" />
+    {% if error or help %}
+        <span for="{{ name }}" class="help-block">
+            {{ error|default(help) }}
+        </span>
+    {% endif %}
+    #}
+{% endmacro %}
+
+{% macro select(name, options, selected) %}
+    <select name="{{ name }}"
+            class="form-control">
+        {% for value, option in options %}
+            <option value="{{ value }}"{% if value == selected %} selected="selected"{% endif %}>{{ option }}</option>
+        {% endfor %}
+    </select>
+{% endmacro %}

@@ -1,0 +1,12 @@
+{% extends "pages.extendeable" %}
+
+{% import "macros.form" as form %}
+
+{% block content %}
+    {{ form.open('login', trans('sign-in.already-a-member'), trans('sign-in.sign-in-to-your-account')) }}
+        {{ form.group(trans_choice('gamer.user-name',1)|capitalize, form.text('username', trans_choice('gamer.user-name',1), null, 'account', errors.first('username'))) }}
+        {{ form.group(trans_choice('gamer.password',1)|capitalize, form.text('password', trans_choice('gamer.password',1), null, 'password', errors.first('password'))) }}
+        {{ form.group(trans('sign-in.remember-me')|capitalize, form.toggle('remember_me')) }}
+        {{ form.buttons(form.submit('submit', trans('sign-in.sign-in')|capitalize)) }}
+    {{ form.close() }}
+{% endblock %}

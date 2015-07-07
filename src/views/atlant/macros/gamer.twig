@@ -1,0 +1,95 @@
+{% macro avatar(member, width, clean) %}
+    {% if clean is not sameas(true) %}
+    <div class="profile-image">
+    {% endif %}
+        <img
+            data-gamer-avatar="{{ member.id }}"
+            class="{% if member.isOnline %}on{% else %}off{% endif %}line"
+            src="{{ member.avatar }}"
+            alt="{{ member.publishedName }}"
+            {% if width %}width="{{ width }}px"{% endif %}
+        />
+    {% if clean is not sameas(true) %}
+    </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro mediaObject(member, clan) %}
+
+    <div class="media" data-gamer-media-object="{{ member.id }}">
+        <a class="pull-left" href="#">
+            {{ _self.avatar(member, 100) }}
+        </a>
+        <div class="media-body">
+            <h3 class="follower-name">{{ member.publishedName }}</h3>
+            {%  if clan %}
+                <div><i class="fa fa-briefcase"></i> {{ member.membershipOf(clan).title }}</div>
+            {% else %}
+                {% for membership in member.memberships %}
+                    <div><i class="fa fa-briefcase"></i> {{ membership.title.title }}</div>
+                {% endfor %}
+            {% endif %}
+            <div class="mb20"></div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro short(gamer) %}
+    <div class="col-md-4 col-xs-4">
+        <a href="{{ gamer.linkView }}" class="friend">
+            {{ _self.avatar(gamer) }}
+            <span>{{ gamer.publishedName }}</span>
+        </a>
+    </div>
+{% endmacro %}
+
+{% macro panel(gamer) %}
+    {% import "macros.clan" as clanMacro %}
+    <div class="panel panel-default">
+        <div class="panel-body profile" style="background: #33414e;">
+            {{ _self.avatar(gamer) }}
+            <div class="profile-data">
+                <div class="profile-data-name">{{ gamer.publishedName }}</div>
+                {% if Visitor.admin %}
+                    <div class="profile-data-title" style="color: #FFF;">{{ gamer.email_address }}</div>
+                {% endif %}
+            </div>
+            <div class="profile-controls">
+                {#<a href="{{ clan.completeUrl }}" class="profile-control-left twitter">{% include "icons.url" %}</a>#}
+                {#<a href="#" class="profile-control-right facebook"><span class="fa fa-facebook"></span></a>#}
+            </div>
+        </div>
+        {% if gamer.allowEdit() or gamer.allowDelete() %}
+            <div class="panel-body">
+                <div class="row">
+                    {% if gamer.allowEdit() %}
+                    <div class="col-md-6">
+                        <a class="btn btn-primary btn-rounded btn-block" href="{{ clan.linkEdit }}">{% include "icons.edit" %} {{ trans('generic.edit') }}</a>
+                    </div>
+                    {% endif %}
+                    {% if gamer.allowDelete() %}
+                        <div class="col-md-6">
+                            <a class="btn btn-danger btn-rounded btn-block" href="{{ clan.linkDelete }}">{% include "icons.delete" %} {{ trans('generic.delete') }}</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="panel-body list-group border-bottom">
+            <a href="#" class="list-group-item">{% include "icons.cup" %} {{ trans('clan.tournament-history') }} <span class="badge badge-default">0</span></a>
+            {#<a href="#" class="list-group-item active"><span class="fa fa-bar-chart-o"></span> Activity</a>#}
+            {#<a href="#" class="list-group-item"><span class="fa fa-coffee"></span> Groups <span class="badge badge-default">18</span></a>#}
+            {#<a href="#" class="list-group-item"><span class="fa fa-users"></span> Friends <span class="badge badge-danger">+7</span></a>#}
+            {#<a href="#" class="list-group-item"><span class="fa fa-folder"></span> Apps</a>#}
+            {#<a href="#" class="list-group-item"><span class="fa fa-cog"></span> Settings</a>#}
+        </div>
+        <div class="panel-body">
+            <h4 class="text-title">{{ trans_choice('clan.clan',2)|capitalize }}</h4>
+            <div class="row">
+                {% for clan in gamer.clans %}
+                    {{ clanMacro.short(clan) }}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endmacro %}

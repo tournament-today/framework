@@ -1,0 +1,81 @@
+{% macro item(gamer, message) %}
+    {% import "macros.gamer" as gamerMacro %}
+    <div class="item in">
+        <div class="image">
+            {{ gamerMacro.avatar(gamer) }}
+        </div>
+        <div class="text">
+            <div class="heading">
+                <a href="{{ gamer.linkView }}">{{ gamer.publishedName }}</a>
+                <span class="date">08:33</span>
+            </div>
+            {{ message }}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro contact(contact, hash, avatar, name, sub, active) %}
+    <a data-messaging-id="{{ hash }}" href="#{{ hash|default(contact.id) }}" class="list-group-item{% if active %} active{% endif %}">
+        {% if contact.classBaseName == "Gamer" %}
+        <div data-messaging-state="{{ contact.id }}" class="list-group-status status-offline"></div>
+        {% endif %}
+        {{ avatar }}
+        <span class="contacts-title">{{ name }}</span>
+        {% if sub %}<p>{{ sub }}</p>{% endif %}
+    </a>
+{% endmacro %}
+
+{% macro cupContact(cup) %}
+    {{ _self.contact(cup, "cup:" ~ cup.id, '<img src="' ~ cup.steamGame.imageUri ~ '" />', cup.name) }}
+{% endmacro %}
+
+{% macro gamerContact(gamer, tabactive) %}
+    {% import "macros.gamer" as gamerMacro %}
+    {{ _self.contact(
+        gamer,
+        "gamer:" ~ gamer.id,
+        gamerMacro.avatar(gamer, null, true),
+        gamer.publishedName,
+        null,
+        tabactive) }}
+{% endmacro %}
+
+{% macro notification(notification) %}
+
+    {% import "macros.gamer" as gamerMacro %}
+    <div class="item in" data-notification-id="{{ notification.id }}">
+        <div class="image">
+            {% if notification.sender %}
+                {{ gamerMacro.avatar(notification.sender) }}
+            {% else %}
+                {{ gamerMacro.avatar(notification.sentinel) }}
+            {% endif %}
+        </div>
+        <div class="text">
+            <div class="heading">
+                <a href="{{ notification.action_view_url }}">{{ notification.title }}</a>
+                <span class="date">
+                    {% if notification.created_at|tz|ago %}{{ notification.created_at|tz|ago }} {{ trans('time.ago') }}{% else %}{{ trans('time.now') }}{% endif %}
+                    {% if notification.require_read_at and notification.require_read_at|tz > "now"|date|tz %}
+                    {% endif %}
+                </span>
+            </div>
+            {% if notification.body %}
+                {{ notification.body }}
+                <hr>
+            {% endif %}
+            {% if notification.clan or notification.cup or notification.match or notification.sender %}
+                <ul>
+                    {% if notification.clan %}<li>{{ trans_choice("clan.clan",1) }}: <a href="{{ notification.clan.linkView }}">{{ notification.clan.name }}</a></li>{% endif %}
+                    {% if notification.cup %}<li>{{ trans_choice("cup.cup",1) }}: <a href="{{ notification.cup.linkView }}">{{ notification.cup.name }}</a></li>{% endif %}
+                    {% if notification.match %}<li>{{ trans_choice("cup.match",1) }}: <a href="{{ notification.match.linkView }}">{{ notification.match.name }}</a></li>{% endif %}
+                    {% if notification.sender %}<li>{{ trans_choice("gamer.gamer",1) }}: <a href="{{ notification.sender.linkView }}">{{ notification.sender.publishedName }}</a></li>{% endif %}
+                </ul>
+            {% endif %}
+            {% if notification.action_view_url %}
+                <hr>
+                {% include "buttons.view" with {'href': notification.action_view_url, 'class': 'primary'} %}
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}

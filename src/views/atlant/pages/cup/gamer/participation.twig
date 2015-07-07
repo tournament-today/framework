@@ -1,0 +1,45 @@
+{% extends "pages.directory" %}
+
+{% import "macros.cup" as cup %}
+
+{% block fav_title %}
+    {{ trans_choice('cup.invitation',2) }}
+{% endblock %}
+
+{% block fav_list %}
+
+        {% for item in gamer.openTeamMemberships %}
+            {{ cup.directory_block(item.cup) }}
+        {% endfor %}
+{% endblock %}
+
+{% block item %}
+
+    <a href="{{ item.cup.linkView }}"
+       class="list-group-item"
+       data-team-id="{{ item.team_id }}"
+       data-team-member-id="{{ item.id }}">
+        <div class="media">
+            <div class="pull-left">
+                <img
+                    class="img-block img-{% if item.cup.upcoming %}online{% else %}offline{% endif %}"
+                     src="{{ item.cup.steamGame.imageUri|default("/templates/" ~ template ~ "/images/photos/user1.png") }}"
+                     alt="{{ item.cup.name }}">
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">{{ item.cup.name }}</h4>
+                <div class="media-content">
+                    <ul class="list-unstyled">
+                        <li>{% include "icons.clan" %} {{ item.team.name }}</li>
+                        <li>{% include "icons.clan" %} {{ item.team.clan.name }}</li>
+                        <li>{% include "icons.calendar" %} {{ item.cup.starts_at|tz }}</li>
+                        {# todo add you participated and you won etc. #}
+                        {% if item.cup.visitorParticipates %}
+                            <li>{% include "icons.ok-checkbox" %} {{ trans('cup.you-participate') }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </a>
+{% endblock %}

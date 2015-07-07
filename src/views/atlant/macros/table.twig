@@ -1,0 +1,40 @@
+{% macro open(heads, class) %}
+<div class="table-responsive">
+    <table class="table mb30 table-striped{% if class %} {{ class }}{% endif %}">
+        {% if heads %}
+        <thead>
+        <tr>
+            {% for head in heads %}
+                <th{% if head.center %} class="text-center"{% endif %}>{{ head.name }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        {% endif %}
+        <tbody>
+{% endmacro %}
+
+{% macro row(cells) %}
+    <tr>
+        {% for cell in cells %}
+            <td{% if cell.center %} class="text-center"{% endif %}>
+                {% if cell.content %}
+                    {% if cell.href %}<a href="{{ cell.href }}">{% endif %}
+                        {% if cell.strong %}<strong>{% endif %}
+                                {{ cell.content }}
+                        {% if cell.strong %}</strong>{% endif %}
+                    {% if cell.href %}</a>{% endif %}
+                {% elseif cell.buttons %}
+                    {% for key, button in cell.buttons %}
+                        {% include "buttons." ~ key with button %}
+                    {% endfor %}
+                {% endif %}
+            </td>
+        {% endfor %}
+    </tr>
+{% endmacro %}
+
+{% macro close() %}
+        </tbody>
+    </table>
+</div>
+{% endmacro %}

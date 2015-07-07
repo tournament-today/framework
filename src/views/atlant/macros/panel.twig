@@ -1,0 +1,40 @@
+{% macro open(title, description, width, nopadding, class, bodyclass) %}
+<div class="col-md-{{ width|default(12) }}">
+    <div class="panel panel-{{ class|default('default') }}">
+        {{ _self.title(title, description, nopadding, bodyclass) }}
+{% endmacro %}
+
+{% macro title(title, description, nopadding, bodyclass) %}
+
+    {% if title or description %}
+        <div class="panel-heading">
+            <div class="panel-title-box">
+            {% if title %}
+                <h3>{{ title }}</h3>
+            {% endif %}
+            {% if description %}
+                <span>{{ description }}</span>
+            {% endif %}
+            </div>
+        </div>
+    {% endif %}
+        <div class="panel-body{% if nopadding %} nopadding{% endif %}{% if bodyclass %} {{ bodyclass }}{% endif %}">
+{% endmacro %}
+
+{% macro footer(buttons) %}
+        </div>
+        <div class="panel-footer">
+            {% if buttons is iterable %}
+            {% for key, button in buttons %}
+                {% include "buttons." ~ key with button %}
+            {% endfor %}
+            {% else %}
+                {{ buttons }}
+            {% endif %}
+{% endmacro %}
+
+{% macro close() %}
+        </div>
+    </div>
+</div>
+{% endmacro %}

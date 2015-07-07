@@ -1,0 +1,45 @@
+{% extends "pages.extendeable" %}
+
+{% import "macros.panel" as panelMacro %}
+{% import "macros.gamer" as gamerMacro %}
+
+{% block content %}
+
+    <div class="page-content-wrap">
+        <div class="row">
+            <div class="col-md-3">
+                {{ gamerMacro.panel(gamer) }}
+            </div>
+        </div>
+    </div>
+
+    {% if Visitor.admin and gamer.relatedGamers %}
+    {{ panelMacro.open(trans('gamer.related-gamers-title'), trans('gamer.related-gamers-description'), 4, null, 'danger') }}
+
+            {% for relatedGamer in gamer.relatedGamers %}
+                <a href="{{ relatedGamer.gamer.linkView }}" class="list-group-item">
+                    <div class="media">
+                        <div class="pull-left">
+                            {{ gamerMacro.avatar(relatedGamer.gamer, 40) }}
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading"><small>#{{ relatedGamer.gamer.id }}:</small> {{ relatedGamer.gamer.publishedName }} <small class="pull-right">{{ relatedGamer.gamer.email_address }} {% include "icons.e-mail" %}</small></h4>
+                            <div class="media-content">
+                                <ul class="list-unstyled">
+                                    {% for match in relatedGamer.matches %}
+                                        {% if match.classBaseName == "GamerIp" %}
+                                            <li>{% include "icons.ip" %} <strong>{{ match.ip }}</strong>{% if match.ip != match.hostname %} <small class="pull-right">{{ match.hostname|upper }}</small>{% endif %}</li>
+                                        {% else %}
+                                            <li>Unknown match criteria, class: {{ match.classBaseName }}</li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+    {{ panelMacro.close() }}
+    {% endif %}
+
+{% endblock %}

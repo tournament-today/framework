@@ -8,6 +8,7 @@ use Request;
 use Response;
 use Session;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
+use Syn\Gamer\Models\Gamer;
 
 abstract class Controller extends BaseController
 {
@@ -118,7 +119,7 @@ abstract class Controller extends BaseController
 	 */
 	protected function getVisitor()
 	{
-		return Auth::check() ? Auth::user() : null;
+		return Auth::check() ? Auth::user() : new Gamer();
 	}
 
 	/**

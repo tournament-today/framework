@@ -1,0 +1,17 @@
+{% macro item(label, href, icon) %}
+    <li><a href="{{ href }}">{% if icon %}{% include "icons." ~ icon ignore missing %}{% endif %}{% if label %} {{ label }}{% endif %}</a></li>
+{% endmacro %}
+
+{% macro forModel(model) %}
+    {% for item in model._breadcrumbs %}
+        {% if item is iterable %}
+            .. todo array
+        {% elseif attribute(model, item) is defined %}
+            {{ _self.item(
+                attribute(attribute(model, item), 'linkName'),
+                attribute(attribute(model, item), 'linkView'),
+                model.classBaseName|lower
+            ) }}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}

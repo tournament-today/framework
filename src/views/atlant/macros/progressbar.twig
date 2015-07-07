@@ -1,0 +1,5 @@
+{% macro bar(percentage, state, size, active) %}
+    <div class="progress progress-{{ size|default('small') }} progress-striped{% if active %} active{% endif %}">
+        <div class="progress-bar progress-bar-{{ state|default('info') }}" role="progressbar" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ percentage }}%;">{{ percentage }}%</div>
+    </div>
+{% endmacro %}

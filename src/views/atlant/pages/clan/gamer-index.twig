@@ -1,0 +1,46 @@
+{% extends 'pages.extendeable' %}
+
+{% import "macros.breadcrumb" as breadcrumb %}
+{% import "macros.form" as form %}
+{% import "macros.panel" as panel %}
+{% import "macros.table" as table %}
+
+{% block breadcrumbs %}
+    {{ breadcrumb.item(gamer.publishedName, gamer.linkView) }}
+{% endblock %}
+
+{% block content %}
+    {{ panel.open(trans_choice('clan.clan',2)|capitalize, null, 6, true) }}
+        {{ table.open([
+            {'name': trans_choice('clan.tag',1)},
+            {'name': trans_choice('clan.clan',1)},
+            {'name': trans_choice('clan.title',1)},
+            {'name': trans_choice('clan.member',2), 'center': true},
+            {'name': ''}
+        ]) }}
+            {% for membership in gamer.memberships %}
+                {% if membership.clan.membership %}
+                {{ table.row([
+                    {'content': membership.clan.tag, 'strong': true, 'href': membership.clan.linkView},
+                    {'content': membership.clan.name, 'href': membership.clan.linkView},
+                    {'content': membership.title.title},
+                    {'content': membership.clan.members|count, 'center': true},
+                    {'buttons': {
+                        'edit': {'href': membership.clan.linkEdit, 'size': 'xs'},
+                        'manage': {'href': membership.clan.linkManage, 'size': 'xs'}
+                        }
+                    },
+                ]) }}
+                {% else %}
+                    {{ table.row([
+                    {'content': membership.clan.tag, 'strong': true, 'href': membership.clan.linkView},
+                    {'content': membership.clan.name, 'href': membership.clan.linkView},
+                    {'content': membership.title.title},
+                    {'content': membership.clan.members|count, 'center': true},
+                    {'content': ''},
+                    ]) }}
+                {% endif %}
+            {% endfor %}
+        {{ table.close() }}
+    {{ panel.close() }}
+{% endblock %}

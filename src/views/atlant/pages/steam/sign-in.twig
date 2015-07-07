@@ -1,0 +1,46 @@
+{% extends "pages.extendeable" %}
+
+{% import "macros.form_signupin" as form_macro %}
+
+{% block header %}{% endblock %}
+
+{% block body_class %}signin{% endblock %}
+
+{% block main_section %}
+    <section>
+
+        <div class="panel panel-signin">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="logo text-center">
+                            <img src="/media/logos/tournament_today.png" height="100px" alt="tournament.today" >
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <h4 class="text-center mb5">{{ trans('sign-in.already-a-member') }}</h4>
+                        <p class="text-center">{{ trans('sign-in.sign-in-to-your-account') }}</p>
+                        {% if login_failed %}
+                            <p class="text-center alert alert-danger">
+                                {{ login_failed }}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="mb30"></div>
+
+                {{ form_open() }}
+
+                <input type="image" src="/media/steam/open-id.png" />
+
+                {{ form_close() }}
+
+            </div><!-- panel-body -->
+            <div class="panel-footer">
+                <a href="{{ route('sign-up') }}" class="btn btn-primary btn-block">{{ trans('sign-in.not-a-member-sign-up') }}</a>
+            </div><!-- panel-footer -->
+        </div><!-- panel -->
+
+    </section>
+{% endblock %}

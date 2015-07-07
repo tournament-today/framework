@@ -1,0 +1,29 @@
+{% macro activityItem(match) %}
+    {#
+    # Only supports two teams?!
+    #}
+    <div class="media row">
+        {% for competitor in match.competitors %}
+            <div class="col-md-{{ 12 / match.competitors|count }} row">
+
+                <a class="pull-left col-md-2 text-center" href="{{ competitor.team.clan.linkView|default('#') }}">
+                    <img
+                        class="img-circle img-{% if competitor.team.visitorIsLeader %}on{% else %}off{% endif %}line"
+                        src="{{ competitor.team.logoUri|default('/templates/syn-2014/images/photos/user2.png') }}"
+                        alt="{{ competitor.team.name }}">
+                </a>
+
+                {% if loop.last is sameas(false) %}
+                <div class="pull-right col-md-2 text-center">
+                    VS
+                    <br><small>{{ match.planned_at }}</small>
+                </div>
+                {% endif %}
+                <div class="media-body col-md-8 text-center">
+                    <strong>{{ competitor.team.name }}</strong><br>
+                    {% if competitor.team.clan %}<a href="{{ competitor.team.clan.linkView|default('#') }}" class="text-muted"><small>{{ trans('cup.team-represents', {'name': competitor.team.clan.name}) }}</small></a>{% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endmacro %}

@@ -1,0 +1,44 @@
+{% extends "pages.extendeable" %}
+
+{% import "macros.breadcrumb" as breadcrumb %}
+{% import "macros.form" as form %}
+
+{% block breadcrumbs %}
+    {{ breadcrumb.item(gamer.publishedName, gamer.linkView) }}
+{% endblock %}
+
+{% block content %}
+
+    <!-- generic account details -->
+    {{ gamer.form({'width': 12}, ['username','real_name', 'nick_name', 'email_address', 'country', 'timezone']) }}
+
+
+
+    <!-- steam account details -->
+    {{ form.open('edit-steam', trans('gamer.gamer-edit-steam'), trans('gamer.gamer-edit-steam-description'), 6) }}
+
+        {% if gamer.steamProfile.url %}
+            {{ form.group(trans_choice('gamer.steam-profile',1),
+            form.text('steam_64', null, gamer.steamProfile.url, 'steam', null, null, null, true)) }}
+        {% else %}
+            <div class="text-center">
+                <br>
+                <input type="hidden" name="edit-steam" value="1" />
+                <input name="edit-steam" type="image" src="/media/steam/open-id.png" />
+                <br>
+            </div>
+        {% endif %}
+
+    {{ form.close() }}
+
+
+    <!-- password change -->
+    {{ form.open('edit-password', trans('gamer.gamer-edit-password'), null, 6) }}
+    {{ form.group(trans_choice('gamer.password',1),
+        form.text('password', null, null, 'password', errors.first('password'), gamer._validation.password)) }}
+
+    {{ form.group(trans('gamer.password-repeat'),
+        form.text('password_repeat', null, null, 'password', errors.first('password_repeat'), gamer._validation.password)) }}
+    {{ form.buttons(form.submit('edit-password', trans('gamer.gamer-edit-password'))) }}
+    {{ form.close() }}
+{% endblock %}

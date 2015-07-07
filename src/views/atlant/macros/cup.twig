@@ -1,0 +1,30 @@
+
+
+{% macro directory_block(cup) %}
+    <a href="{{ cup.linkView }}" class="list-group-item">
+        <div class="media">
+            <div class="pull-left">
+                <img
+                    class="img-block img-{% if cup.upcoming %}online{% else %}offline{% endif %}"
+                    src="{{ cup.steamGame.imageUri|default("/templates/" ~ template ~ "/images/photos/user1.png") }}"
+                    alt="{{ cup.name }}">
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">{{ cup.name }}</h4>
+                <div class="media-content">
+                    <ul class="list-unstyled">
+                        <li>{% include "icons.calendar" %} {{ cup.starts_at|tz }}</li>
+                        {# todo add you participated and you won etc. #}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </a>
+        <div class="btn-group btn-group-xs">
+            {% if cup.visitorParticipates %}
+                <a class="btn btn-success" href="{{ cup.linkView }}">{% include "icons.ok-checkbox" %} {{ trans('cup.you-participate') }}</a>
+            {% elseif cup.visitorInvited %}
+                <a class="btn btn-primary">{% include "icons.open-checkbox" %} {{ trans('cup.you-are-invited') }}</a>
+            {% endif %}
+        </div>
+{% endmacro %}

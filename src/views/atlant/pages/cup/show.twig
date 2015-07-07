@@ -1,0 +1,104 @@
+{% extends "pages.extendeable" %}
+
+{% import "macros.team" as teamMacro %}
+{% import "macros.match" as matchTpl %}
+{% import "macros.bracket" as bracketMacro %}
+{% import "macros.panel" as panelMacro %}
+
+{% block content %}
+    <div class="col-md-3">
+        <h5 class="md-title">{{ trans('cup.steam_game_id-label') }}</h5>
+        <div class="text-center">
+            <img class="img-block img-offline" src="{{ cup.steamGame.imageUri|default("/templates/" ~ template ~ "/images/photos/user1.png") }}" alt="...">
+            <div>{{ cup.steamGame.name }}</div>
+        </div>
+
+        {% if cup.allowEdit() or cup.allowDelete() %}
+            <div class="panel-body list-group border-bottom">
+                {% if cup.allowEdit() %}
+                    <a class="list-group-item list-group-item-warning" href="{{ cup.linkEdit }}">
+                        {{ trans('generic.edit') }}
+                    </a>
+                {% endif %}
+                {% if cup.allowDelete() %}
+                    <a class="list-group-item list-group-item-danger" href="{{ cup.linkDelete }}">
+                        {{ trans('generic.delete') }}
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if cup.teams %}
+            <h5 class="md-title">{{ trans_choice('cup.participant-team',2) }}</h5>
+            <div class="list-group people-group">
+            {% for team in cup.teams %}
+                {{ teamMacro.short(team) }}
+            {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="col-md-9">
+        <div class="row row-stat">
+
+            <div class="col-md-6">
+                <div class="panel panel-dark noborder">
+                    <div class="panel-heading noborder">
+                        <div class="panel-icon">{% include "icons.time" %}</div>
+                        <div class="media-body">
+                            <h5 class="md-title nomargin">{{ trans('cup.starts') }}</h5>
+                            <h1 class="mt5">{{ cup.starts_at|tz }}</h1>
+                        </div><!-- media-body -->
+                        <hr>
+                        <div class="clearfix mt20">
+                            <div class="pull-left">
+                                <h5 class="md-title nomargin">{{ trans('cup.closes_in-label') }}</h5>
+                                <h4 class="nomargin" data-time-countdown="{{ cup.id }}">{{ cup.closes_at|default(cup.starts_at)|tz|remaining }}</h4>
+                            </div>
+                            <div class="pull-right">
+                                <h5 class="md-title nomargin">{{ trans('cup.starts_at-label') }}</h5>
+
+                                <h4 class="nomargin">
+                                    {{ cup.starts_at }}
+                                </h4>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div
+                    class="panel panel-{% if cup.teams|count < cup.teams_min %}danger{% elseif cup.teams|count == cup.teams_max %}success{% else %}primary{% endif %} noborder"
+                    >
+                    <div class="panel-heading noborder">
+                        <div class="panel-icon">{% include "icons.clan" %}</div>
+                        <div class="media-body">
+                            <h5 class="md-title nomargin">{{ trans_choice('cup.participant-team',2) }}
+                                <span class="badge badge-default pull-right">{{ trans('cup.team_size-label') }}: {{ cup.team_size }}</span></h5>
+                            <h1 class="mt5">{{ cup.teams|count }}{% if cup.teams_max %} / {{ cup.teams_max }}{% endif %}</h1>
+                        </div>
+                        <hr>
+                        <div class="clearfix mt20">
+                            <div class="pull-left">
+                                <h5 class="md-title nomargin">{{ trans('cup.spots-open') }}</h5>
+                                <h4 class="nomargin">{% if cup.teams_max %}{{ cup.teams_max - cup.teams|count }}{% else %}{{ trans('cup.spots-open-no-limit') }}{% endif %}</h4>
+                            </div>
+                            <div class="pull-right">
+                                <h5 class="md-title nomargin">{{ trans('cup.spots-needed') }}</h5>
+                                <h4 class="nomargin">{{ cup.teams_min }}</h4>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% if cup.visitorCanSignUp %}
+                {{ teamSignUp.form({'width': 6}) }}
+            {% endif %}
+            {% if cup.visitorInvited %}
+                {% include "pages.cup.gamer.cup-team-invites-select" %}
+            {% endif %}
+        </div>
+        {{ bracketMacro.generate(cup) }}
+    </div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "pages.directory" %}
+
+{% import "macros.clan" as clan %}
+
+{% block fav_title %}
+    {{ trans('clan.your-clans')|capitalize }}
+{% endblock %}
+
+{% block fav_list %}
+
+    {% for membership in Visitor.memberships %}
+        {{ clan.mediaObject(membership.clan) }}
+        {#<a href="{{ membership.clan.linkView }}" class="list-group-item">
+            <div class="media">
+                <div class="pull-left">
+                    <img class="img-circle img-offline" src="{{ membership.clan.logoUri|default("/templates/" ~ template ~ "/images/photos/user3.png") }}" alt="...">
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">{{ membership.clan.name }}</h4>
+                    <small>{{ membership.title.title }}</small>
+                </div>
+            </div>
+        </a>#}
+    {% endfor %}
+{% endblock %}
+
+{% block item %}
+
+    {{ clan.mediaObject(item) }}
+{% endblock %}

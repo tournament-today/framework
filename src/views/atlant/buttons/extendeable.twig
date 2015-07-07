@@ -1,0 +1,4 @@
+<a class="btn btn-{{ class|default('default') }}{% if size %} btn-{{ size }}{% endif %}{% if pull %} pull-{{ pull|default('right') }}{% endif %}"
+   href="{{ href|default('#') }}">
+    {% if icon %}{% include 'icons.' ~ icon %} {% endif %}{{ label }}
+</a>

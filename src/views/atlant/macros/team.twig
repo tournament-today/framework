@@ -1,0 +1,41 @@
+
+
+{% macro mediaObject(team) %}
+
+    <div class="media" data-team-media-object="{{ team.id }}">
+        <a class="pull-left" href="#">
+            {% if team.clan %}
+                {% import "macros.clan" as clanMacro %}
+                {{ clanMacro.avatar(team.clan, 50) }}
+            {% endif %}
+        </a>
+        <div class="media-body">
+            <h3 class="follower-name">{{ team.name }}</h3>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro short(team) %}
+    <div class="col-md-4 col-xs-4">
+        {% if team.clan %}
+            <a href="{{ team.clan.linkView }}" class="friend">
+        {% else %}
+            <div class="friend">
+        {% endif %}
+            {% if team.clan %}
+                {% import "macros.clan" as clanMacro %}
+                {{ clanMacro.avatar(team.clan, 50) }}
+            {% else %}
+                <img src="/templates/atlant/assets/no-image.jpg" width="100px" />
+            {% endif %}
+            <span>{{ team.name }}</span>
+            {% if team.clan %}
+                <small>{{ trans('cup.team-represents', {'name': team.clan.name}) }}</small>
+            {% endif %}
+            {% if team.clan %}
+                </a>
+            {% else %}
+                </div>
+            {% endif %}
+    </div>
+{% endmacro %}

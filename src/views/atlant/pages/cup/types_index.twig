@@ -1,0 +1,60 @@
+{% extends "pages.extendeable" %}
+
+
+{% block content %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>
+                {{ trans('competition_type.name-label') }}
+            </th>
+            <th>
+                {{ trans_choice('competition_type.competition-type',1) }}
+            </th>
+            <th>
+                {#{{ trans('competition_type.bye_enabled-label') }}#}
+            </th>
+            <th>
+                {{ trans('competition_type.selectable-label') }}
+            </th>
+            <th>
+                {{ trans('competition_type.admin_only-label') }}
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>
+                    {% if item.elimination %}
+                        Elimination after {{ item.elimination_after }} loss.
+                    {% else %}
+                        Group tournament with points:
+                        <ul>
+                            <li>win: {{ item.points_win }}</li>
+                            <li>draw: {{ item.points_draw }}</li>
+                            <li>loss: {{ item.points_loss }}</li>
+                            <li>forfeit: {{ item.points_forfeit }}</li>
+                            <li>no show: {{ item.points_no_show }}</li>
+                        </ul>
+                    {% endif %}
+                </td>
+                <td>
+                    {#{% if item.bye_enabled %}yes{% else %}no{% endif %}#}
+                </td>
+                <td>
+                    {% if item.selectable %}yes{% else %}no{% endif %}
+                </td>
+                <td>
+                    {% if item.admin_only %}yes{% else %}no{% endif %}
+                </td>
+                <td>
+                    {% include "buttons.edit" with {'href': item.linkEdit} %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

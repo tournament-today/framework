@@ -1,0 +1,30 @@
+{% macro child(routeName, params, label, icon) %}
+    <li{% if routeName is sameas(route_current_route_name()) or routeName is sameas(url_full()) %} class="active"{% endif %}>
+        <a href="{% if route_has(routeName) %}{{ route(routeName, params ? params : {}) }}{% else %}{{ routeName }}{% endif %}">
+            {% if icon %}
+            {% include "icons." ~ icon %}
+            {% endif %}
+            <span>{{ label }}</span>
+        </a>
+    </li>
+
+
+{% endmacro %}
+
+{% macro item(routeName, params, label, icon, children) %}
+    <li class="{% if children %}xn-openable{% elseif routeName is sameas(route_current_route_name()) or routeName is sameas(url_full()) %}active{% endif %}">
+        <a href="{% if routeName %}{% if route_has(routeName) %}{{ route(routeName, params ? params : {}) }}{% else %}{{ routeName }}{% endif %}{% else %}#{% endif %}">
+            {% if icon %}
+                {% include "icons." ~ icon %}
+            {% endif %}
+            <span class="xn-text">{{ label }}</span>
+        </a>
+        {% if children %}
+        <ul class="children">
+            {% for child in children %}
+                {{ child }}
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </li>
+{% endmacro %}

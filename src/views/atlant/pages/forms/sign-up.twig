@@ -1,0 +1,86 @@
+{% extends "pages.extendeable" %}
+
+
+{% import "macros.form" as form %}
+
+{% block header %}{% endblock %}
+
+{% block body_class %}signin{% endblock %}
+
+{% block content %}
+
+    {{ form.open('signup', trans('sign-up.create-a-new-account'), trans('sign-up.enter-credentials')) }}
+
+    {{ form.group(trans_choice('gamer.real-name',1)|capitalize, form.text('real_name', trans_choice('gamer.real-name',1), null, 'account', errors.first('real_name')), errors.first('real_name')) }}
+    {{ form.group(trans_choice('gamer.user-name',1)|capitalize, form.text('username', trans_choice('gamer.user-name',1), null, 'account', errors.first('username')), errors.first('username')) }}
+
+    {{ form.group(trans_choice('generic.e-mail-address',1)|capitalize, form.text('email_address', trans_choice('generic.e-mail-address',1), null, 'account', errors.first('email_address')), errors.first('email_address')) }}
+
+    {{ form.group(trans_choice('gamer.password',1)|capitalize, form.text('password', trans_choice('gamer.password',1), null, 'password', errors.first('password')), errors.first('password')) }}
+    {% if input_get('invite') %}
+        {{ form.group(trans_choice('generic.invite-token',1)|capitalize, form.text('invite', trans_choice('generic.invite-token',1), null, 'invite', errors.first('invite')), errors.first('invite')) }}
+    {% endif %}
+
+    {{ form.group(trans('legal.i-agree-with') ~ '  <a href="">' ~ trans('legal.terms-conditions') ~ '</a>', form.toggle('agree_tac', false, null, null, errors.first('agree_tac')), errors.first('agree_tac')) }}
+
+    {{ form.buttons(form.submit('submit', trans('sign-up.create-account'))) }}
+
+    {{ form.close() }}
+    {#
+    <section>
+
+        <div class="panel panel-signup">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <h4 class="text-center mb5">{{ trans('sign-up.create-a-new-account') }}</h4>
+                        <p class="text-center">{{ trans('sign-up.enter-credentials') }}</p>
+                    </div>
+                </div>
+                <div class="mb30"></div>
+                {{ form_open() }}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            {{ form_macro.text('real_name', trans_choice('gamer.real-name',1), null, 'account', errors.first('real_name')) }}
+                        </div>
+                        <div class="col-sm-6">
+                            {{ form_macro.text('username', trans_choice('gamer.user-name',1), null, 'account', errors.first('username')) }}
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-6">
+                            {{ form_macro.text('email_address', trans_choice('generic.e-mail-address',1), null, 'e-mail', errors.first('email_address')) }}
+                        </div>
+                        <div class="col-sm-6">
+                            {{ form_macro.text('password', trans_choice('gamer.password',1), null, 'password', errors.first('password')) }}
+                        </div>
+                    </div>
+                    <br />
+                    {% if input_get('invite') %}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ form_macro.text('invite', trans_choice('generic.invite-token',1), input_get('invite'), 'invite', errors.first('invite')) }}
+                        </div>
+                    </div>
+                    <br />
+                    {% endif %}
+                    <div class="clearfix">
+                        <div class="pull-left">
+                            {{ form_macro.toggle('agree_tac', trans('legal.i-agree-with') ~ '  <a href="">' ~ trans('legal.terms-conditions') ~ '</a>') }}
+                        </div>
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-success">{{ trans('sign-up.create-account') }} <i class="fa fa-angle-right ml5"></i></button>
+                        </div>
+                    </div>
+               {{ form_close() }}
+
+            </div><!-- panel-body -->
+            <div class="panel-footer">
+                <a href="{{ route('sign-in') }}" class="btn btn-primary btn-block">{{ trans('sign-up.already-a-member') }}</a>
+            </div><!-- panel-footer -->
+        </div><!-- panel -->
+
+    </section>
+    #}
+{% endblock %}

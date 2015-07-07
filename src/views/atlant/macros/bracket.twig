@@ -1,0 +1,71 @@
+
+
+{% macro open(cup) %}
+    <div class="bracket col-md-12">
+{% endmacro %}
+
+{% macro generate(cup) %}
+    {% import "macros.panel" as panel %}
+
+    {{ _self.open(cup) }}
+        {% for round in cup.rounds %}
+            {{ panel.open("Round " ~ round.round_no, round.planned_at ? round.planned_at|tz : trans('generic.to-be-decided'), 3) }}
+                {% for match in round.matches %}
+                    {{ _self.match(match) }}
+                    {% if loop.last is sameas(false) %}<br>{% endif %}
+                {% endfor %}
+            {{ panel.close() }}
+        {% endfor %}
+    {{ _self.close(cup) }}
+{% endmacro %}
+
+{% macro close(cup) %}
+    </div>
+{% endmacro %}
+
+{% macro match(match) %}
+
+    <ul class="match list-group list-group-contacts border-bottom">
+        {% if match.competitors|count %}
+            {% for competitor in match.competitors %}
+                {{ _self.competitor(competitor, loop.last) }}
+            {% endfor %}
+        {% else %}
+            {{ _self.placeholderCompetitors() }}
+        {% endif %}
+    </ul>
+{% endmacro %}
+
+{% macro competitor(competitor, last) %}
+    {% import "macros.team" as teamMacro %}
+    {% if competitor.team.clan %}
+        <a class="competitor list-group-item" href="{{ competitor.team.clan.linkView }}">
+    {% else %}
+        <li class="competitor list-group-item">
+    {% endif %}
+        <span class="label label-default pull-right score">?</span>
+
+        {{ competitor.team.name }}
+        {% if competitor.team.clan %}
+            <br><small>{{ trans('cup.team-represents', {'name': competitor.team.clan.name}) }}</small>
+        {% endif %}
+
+    {% if last is sameas(false) %}
+        <span class="vs"><span>vs</span>{#{% include "icons.versus" %}#}</span>
+    {% endif %}
+    {% if competitor.team.clan %}
+        </a>
+    {% else %}
+        </li>
+    {% endif %}
+{% endmacro %}
+
+{% macro placeholderCompetitors() %}
+    <li class="competitor list-group-item">
+        {{ trans('generic.to-be-decided') }}
+        <span class="vs"><span>vs</span>{#{% include "icons.versus" %}#}</span>
+    </li>
+    <li class="competitor list-group-item">
+        {{ trans('generic.to-be-decided') }}
+    </li>
+{% endmacro %}

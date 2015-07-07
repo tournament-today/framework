@@ -1,0 +1,13 @@
+<p>
+    Hi {{ gamer.publishedName }},
+</p>
+<p>
+    At {{ gamer.created_at }}, you signed up on our website. Please verify this e-mail address by following the following link: <a href="{{ route('email-verified', {'gamer': gamer.id, 'name': gamer.linkName, 'hash': gamer.email_address|md5}) }}">{{ route('email-verified', {'gamer': gamer.id, 'name': gamer.linkName, 'hash': gamer.email_address|md5}) }}</a>.
+</p>
+<p>
+    If you did not sign up on our website or feel this is in any way an error, please let us know.
+</p>
+<p>
+    With kind regards,<br>
+    team tournament.today
+</p>

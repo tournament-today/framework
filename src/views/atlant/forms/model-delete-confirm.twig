@@ -1,0 +1,11 @@
+
+{% set action = "delete" %}
+    {% include "framework::form.open" %}
+        {% include "framework::form.elements.hidden" with
+            {'name': 'id', 'model': model} %}
+        {% if trans_has(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-' ~ action ~ '-confirm') %}
+            <p>
+                {{ trans(model.classBaseName|snake_case ~ '.' ~ model.classBaseName|snake_case ~ '-form-' ~ action ~ '-confirm', model.getAttributes()) }}
+            </p>
+        {% endif %}
+    {% include "framework::form.close" %}

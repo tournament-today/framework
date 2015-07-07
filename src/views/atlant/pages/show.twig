@@ -1,0 +1,14 @@
+{% extends "pages.extendeable" %}
+
+{% import "macros.breadcrumb" as breadcrumb %}
+{% import "macros.panel" as panel %}
+
+{% block breadcrumbs %}
+    {{ breadcrumb.forModel(model) }}
+{% endblock %}
+
+{% block content %}
+    {{ panel.open('', '', 12) }}
+
+    {{ panel.close() }}
+{% endblock %}

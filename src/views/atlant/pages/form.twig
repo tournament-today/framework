@@ -1,0 +1,10 @@
+{% extends "pages.extendeable" %}
+
+
+{% block breadcrumbs %}
+    {{ breadcrumb.forModel(model) }}
+{% endblock %}
+
+{% block content %}
+    {{ model.form() }}
+{% endblock %}

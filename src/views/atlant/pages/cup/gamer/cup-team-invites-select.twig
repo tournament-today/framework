@@ -1,0 +1,14 @@
+{% import "macros.panel" as panel %}
+{% import "macros.table" as table %}
+
+
+
+{{ panel.open(trans('cup.you-are-invited'), trans('cup.you-are-invited-description'), 6, true) }}
+    {{ table.open() }}
+    {% for invite in cup.visitorInvites %}
+        {{ table.row([
+            {'content': invite.team.name},
+            {'buttons': {'join': {'href': invite.team.linkJoin, 'size': 'xs'}}}
+        ]) }}
+    {% endfor %}
+{{ panel.close() }}

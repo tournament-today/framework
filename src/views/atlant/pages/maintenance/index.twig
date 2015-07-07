@@ -1,0 +1,37 @@
+{% extends "pages.extendeable" %}
+
+
+{% block body_class %}maintenance{% endblock %}
+
+{% block page %}
+    <div class="error-container">
+        <div class="error-code">500</div>
+        <div class="error-text">Internal server error</div>
+        <div class="error-subtext">The server encountered an internal error or misconfiguration and was unable to complete your request.</div>
+    </div>
+{% endblock %}
+
+{% block page_scripts %}
+
+
+    <script type="text/javascript">
+        (function($)
+        {
+            setInterval(function()
+            {
+                $.ajax('{{ route('home') }}', {
+                    complete: function(xhr, status)
+                    {
+                        // once status 503 is removed, let's redirect user
+                        // take into account any internal server error or worse
+                        // please note that the login page throws a 403 not allowed/authentication required
+                        if(xhr.status != 503 && xhr.status < 500)
+                        {
+                            location.reload();
+                        }
+                    }
+                });
+            }, 10000);
+        }(jQuery));
+    </script>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "pages.extendeable" %}
+
+{% import "macros.breadcrumb" as breadcrumb %}
+{% import "macros.form" as form %}
+{% import "macros.table" as table %}
+{% import "macros.panel" as panel %}
+
+{% block breadcrumbs %}
+    {{ breadcrumb.item(clan.name, clan.linkView) }}
+{% endblock %}
+
+{% block content %}
+
+    {{ form_open() }}
+        {{ panel.open(trans('clan.clan-edit-members'), trans('clan.clan-edit-members-description'), 6, true) }}
+
+
+            {{ table.open([
+                {'name': ''},
+                {'name': trans_choice('clan.title',1)},
+            ]) }}
+                {% for member in clan.members %}
+                    {% if clan.membership.manage_rights or clan.membership.leader %}
+                        {% set title_select %}
+                            {{ form.select('title[' ~ member.id ~ ']', clan.titles.lists('title', 'id'), member.clan_title_id) }}
+                        {% endset %}
+                    {% else %}
+                        {% set title_select %}
+                            {{ member.title.title }}
+                        {% endset %}
+                    {% endif %}
+
+                    {{ table.row([
+                        {'content': member.gamer.publishedName},
+                        {'content': title_select},
+                    ]) }}
+                {% endfor %}
+            {{ table.close() }}
+            {% if clan.membership.manage_rights or clan.membership.leader %}
+                {{ form.buttons(form.submit('update-titles', trans('clan.clan-set-titles'))) }}
+            {% endif %}
+
+        {{ panel.close() }}
+    {{ form_close() }}
+
+    {{ panel.open(trans('clan.clan-edit-titles'), trans('clan.clan-edit-titles-description'), 6, true) }}
+        {{ table.open([
+            {'name': trans_choice('clan.title',1)},
+            {'name': ''}
+        ]) }}
+
+            {% for title in clan.titles %}
+                {% if clan.membership.manage_rights or clan.membership.leader %}
+                    {{ table.row([
+                        {'content': title.title},
+                        {'buttons': {'edit': {'href': title.linkEdit, 'size': 'xs'}}},
+                    ]) }}
+                {% else %}
+
+                    {{ table.row([
+                        {'content': title.title},
+                        {'content': ''},
+                    ]) }}
+                {% endif %}
+            {% endfor %}
+        {{ table.close() }}
+    {% if clan.membership.manage_rights or clan.membership.leader %}
+    {{ panel.footer(
+        {'create': {'href': route('ClanTitle@create', {'id': clan.id, 'name': clan.linkName})} }
+    ) }}
+    {% endif %}
+    {{ panel.close() }}
+
+
+    {{ form_open() }}
+        {{ panel.open(trans('clan.clan-edit-invites'), trans('clan.clan-edit-invites-description'), 6, true) }}
+            {{ table.open([
+                {'name': trans_choice('generic.e-mail-address',1)},
+                {'name': trans_choice('generic.invite-token',1)},
+                {'name': trans_choice('clan.title',1)}
+            ]) }}
+                {% for invite in clan.invites %}
+                    {% if clan.membership.manage_invite or clan.membership.leader %}
+                        {% set title_select %}
+                            {{ form.select('invite_title[' ~ invite.id ~ ']', clan.titles.lists('title', 'id'), invite.clan_title_id) }}
+                        {% endset %}
+                    {% else %}
+                        {% set title_select %}
+                        {{ invite.title.title }}
+                        {% endset %}
+                    {% endif %}
+                    {{ table.row([
+                        {'content': invite.usable ? invite.email_address : '<del>' ~ invite.email_address ~ '</del>'},
+                        {'content': invite.usable ? '<code>' ~ invite.token ~ '</code>' : invite.gamerInvited.publishedName},
+                        {'content': invite.title.title}
+                    ]) }}
+                {% endfor %}
+            {{ table.close() }}
+            {% if clan.membership.manage_rights or clan.membership.leader %}
+                {{ panel.footer(form.submit('update-invites', trans('clan.clan-edit-invites'))) }}
+                    {{ panel.title(trans('clan.clan-add-invite'), trans('clan.clan-add-invite-description')) }}
+                    {{ form.group(
+                        trans('clan.clan-add-invite'),
+                        form.text('email_address', trans_choice('generic.e-mail-address',1), null, 'e-mail', errors.first('email_address'))
+                    ) }}
+                    {{ form.group(
+                        trans_choice('clan.title',1),
+                        form.select('invite_title', clan.titles.lists('title', 'id'), invite.clan_title_id)
+                    ) }}
+                    {{ panel.footer(form.submit('add-invite', trans('clan.clan-add-invite'))) }}
+            {% endif %}
+
+        {{ panel.close() }}
+    {{ form_close() }}
+
+{% endblock %}

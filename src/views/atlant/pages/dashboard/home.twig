@@ -1,0 +1,73 @@
+{% extends "pages.extendeable" %}
+
+{% import "macros.panel" as panelMacro %}
+{% import "macros.table" as tableMacro %}
+{% import "macros.progressbar" as barMacro %}
+
+{% block content %}
+
+    {#
+    # About panel
+    #}
+    {{ panelMacro.open(trans('dashboard.about-title'), trans('dashboard.about-title-description'), 4, false, 'colorful') }}
+        <blockquote>{{ trans('dashboard.about-main') }}</blockquote>
+        <h4>{{ trans('dashboard.about-realtime') }}</h4>
+        <p>
+            {{ trans('dashboard.about-realtime-description') }}
+        </p>
+        <h4>{{ trans('dashboard.about-cloud') }}</h4>
+        <p>
+            {{ trans('dashboard.about-cloud-description') }}
+        </p>
+    {{ panelMacro.close() }}
+
+    {#
+    # Schedule
+    #}
+    {{ panelMacro.open(trans('dashboard.schedule-title'), trans('dashboard.schedule-description'), 4, null, 'primary', 'panel-body-table') }}
+        {{ tableMacro.open([
+            {'name': ''},
+            {'name': trans('dashboard.schedule-phase')},
+            {'name': trans('dashboard.schedule-progress'), 'center': true}
+        ], 'table-bordered') }}
+
+            {{ tableMacro.row([
+                {'content': include('icons.open-checkbox'), 'center': true},
+                {'content': 'automated configuration game servers'},
+                {'content': barMacro.bar(10), 'center': true}
+            ]) }}
+            {{ tableMacro.row([
+                {'content': include('icons.open-checkbox'), 'center': true},
+                {'content': 'scalability test game servers'},
+                {'content': barMacro.bar(70, null, null, true), 'center': true}
+            ]) }}
+            {{ tableMacro.row([
+                {'content': include('icons.open-checkbox'), 'center': true},
+                {'content': 'creation and execution of tournaments'},
+                {'content': barMacro.bar(50, 'danger', null, null), 'center': true}
+            ]) }}
+            {{ tableMacro.row([
+                {'content': include('icons.ok-checkbox'), 'center': true},
+                {'content': 'clan creation, rights and roles'},
+                {'content': barMacro.bar(100,'success'), 'center': true}
+            ]) }}
+            {{ tableMacro.row([
+                {'content': include('icons.ok-checkbox'), 'center': true},
+                {'content': 'real-time connection and notification'},
+                {'content': barMacro.bar(100,'success'), 'center': true}
+            ]) }}
+            {{ tableMacro.row([
+                {'content': include('icons.ok-checkbox'), 'center': true},
+                {'content': 'user signup & -in'},
+                {'content': barMacro.bar(100,'success'), 'center': true}
+            ]) }}
+        {{ tableMacro.close() }}
+    {{ panelMacro.close() }}
+    {#
+    # Twitter feed
+    #}
+    {{ panelMacro.open(trans('dashboard.twitter-feed-title'), trans('dashboard.twitter-feed-description'), 4, true) }}
+        <a class="twitter-timeline" width="100%" height="500px" href="https://twitter.com/tournamenttoday" data-widget-id="534377602060800000">Tweets by @tournamenttoday</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    {{ panelMacro.close() }}
+{% endblock %}

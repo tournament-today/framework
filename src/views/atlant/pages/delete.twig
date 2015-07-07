@@ -1,0 +1,12 @@
+{% extends 'pages.notice' %}
+
+{% import "macros.breadcrumb" as breadcrumb %}
+{% import "macros.form" as form %}
+
+{% block breadcrumbs %}
+    {{ breadcrumb.item(model.linkName, model.linkView) }}
+{% endblock %}
+
+{% block content %}
+    {% include "forms.model-delete-confirm" %}
+{% endblock %}

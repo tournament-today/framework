@@ -1,0 +1,79 @@
+{% extends "pages.extendeable" %}
+
+{% import "macros.clan" as clanMacro %}
+
+{% block content %}
+    <div class="page-content-wrap">
+        <div class="row">
+            <div class="col-md-3">
+                {{ clanMacro.panel(clan) }}
+            </div>
+        </div>
+    </div>
+
+    {#<div class="row">#}
+    {#<div class="col-sm-4 col-md-3">#}
+        {#<div class="text-center">#}
+            {#{% if clan.logoUri %}#}
+                {#<img src="{{ clan.logoUri }}" class="img-circle img-offline img-responsive img-profile" alt="" />#}
+            {#{% endif %}#}
+            {#<h4 class="profile-name mb5">{{ clan.name }}</h4>#}
+            {#{% if Visitor.membershipOf(clan.id) %}#}
+                {#<div><i class="fa fa-briefcase"></i> {{ Visitor.membershipOf(clan.id).title }}</div>#}
+            {#{% endif %}#}
+
+            {#<div class="mb20"></div>#}
+            {#&#123;&#35;#}
+            {#<div class="btn-group">#}
+                {#<button class="btn btn-primary btn-bordered">Following</button>#}
+                {#<button class="btn btn-primary btn-bordered">Followers</button>#}
+            {#</div>#}
+            {#&#35;&#125;#}
+        {#</div><!-- text-center -->#}
+
+        {#<br />#}
+        {#&#123;&#35;#}
+                {#<h5 class="md-title">About</h5>#}
+                {#<p class="mb30">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat... <a href="">Show More</a></p>#}
+
+        {#&#35;&#125;#}
+                {#<h5 class="md-title">Connect</h5>#}
+                {#<ul class="list-unstyled social-list">#}
+                    {#<li>{% include "icons.url" %} <a target="_blank" href="{{ clan.completeUrl }}">{{ clan.shortUrl }}</a></li>#}
+                {#</ul>#}
+
+                {#<div class="mb30"></div>#}
+{#&#123;&#35;#}
+                {#<h5 class="md-title">Address</h5>#}
+                {#<address>#}
+                    {#795 Folsom Ave, Suite 600<br>#}
+                    {#San Francisco, CA 94107<br>#}
+                    {#<abbr title="Phone">P:</abbr> (123) 456-7890#}
+                {#</address>#}
+        {#&#35;&#125;#}
+    {#</div><!-- col-sm-4 col-md-3 -->#}
+
+    {#<div class="col-sm-8 col-md-9">#}
+
+        {#<!-- Nav tabs -->#}
+        {#<ul class="nav nav-tabs nav-line">#}
+            {#<li class="active"><a href="#members" data-toggle="tab"><strong>Members</strong></a></li>#}
+            {#&#123;&#35;#}
+            {#<li><a href="#activities" data-toggle="tab"><strong>Activities</strong></a></li>#}
+            {#<li><a href="#followers" data-toggle="tab"><strong>Followers</strong></a></li>#}
+            {#<li><a href="#following" data-toggle="tab"><strong>Following</strong></a></li>#}
+            {#<li><a href="#events" data-toggle="tab"><strong>My Events</strong></a></li>#}
+            {#&#35;&#125;#}
+        {#</ul>#}
+        {#<div class="tab-pane" id="members">#}
+
+            {#<div class="follower-list">#}
+                {#{% for member in clan.members %}#}
+                    {#{{ gamer.mediaObject(member.gamer, clan.id) }}#}
+                {#{% endfor %}#}
+            {#</div>#}
+        {#</div>#}
+    {#</div><!-- col-sm-9 -->#}
+    {#</div><!-- row -->#}
+
+{% endblock %}

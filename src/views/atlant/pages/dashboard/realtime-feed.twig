@@ -1,0 +1,84 @@
+{% extends "pages.extendeable" %}
+
+{% import "macros.messaging" as messagingMacro %}
+
+{% block content_title %}{% endblock %}
+{% block content_breadcrumbs %}
+    <ul class="breadcrumb push-down-0">
+        <li class="active">{{ trans_choice('generic.notification',2) }}</li>
+    </ul>
+{% endblock %}
+
+{% block content_wrap %}
+
+    <div class="content-frame">
+        <div class="content-frame-top">
+            <div class="page-title">
+                <h2>{% include "icons.notifications" %} {{ trans_choice('generic.notification',2) }}</h2>
+            </div>
+        </div>
+        <div class="content-frame-right">
+            <div data-messaging-contacts class="list-group list-group-contacts border-bottom push-down-10">
+                {{ messagingMacro.gamerContact(Sentinel,true) }}
+                {% for cupMembership in Visitor.runningTeamMemberships %}
+                    {{ messagingMacro.cupContact(cupMembership.cup) }}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="content-frame-body content-frame-body-left">
+            <div class="messages messages-img" data-messaging-messages>
+                {% for notification in Visitor.notifications %}
+                    {{ messagingMacro.notification(notification) }}
+                {% endfor %}
+            </div>
+            <div class="panel panel-default push-up-10 hide">
+                <div class="panel-body panel-body-search">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            {#<button class="btn btn-default"><span class="fa fa-camera"></span></button>#}
+                            <button class="btn btn-default"><span class="fa fa-chain"></span></button>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Your message...">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page_scripts %}
+<script type="text/javascript">
+    $(function()
+    {
+        var currentContact = "gamer:1";
+
+        $("[data-messaging-contacts] a[data-messaging-id]").on("click", function(e)
+        {
+            e.preventDefault();
+
+            var toContact = $(this).attr('data-messaging-id');
+//            if(currentContact == toContact)
+//                return;
+
+            // disable other contacts as active
+            $("[data-messaging-contacts] a[data-messaging-id]").toggleClass("active", false);
+            // removes all messages from previous contact
+            $("[data-messaging-messages] > [data-notification-id]").slideUp();
+            // set current contact to active
+            $(this).toggleClass("active", true);
+            // loads notifications from this user for visitor
+            $.ajax({
+                url: "{{ route("Gamer@ajaxNotifications", {'gamer': Visitor.id, 'name': Visitor.linkName}) }}",
+                method: 'POST',
+                data: {
+                    'sender_id': toContact,
+                    '_token': "{{ csrf_token() }}"
+                }
+            });
+        });
+    })(jQuery);
+</script>
+{% endblock %}

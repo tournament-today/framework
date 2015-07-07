@@ -1,0 +1,7 @@
+
+
+
+    {% set type = attribute(model._types, attribute) %}
+    {% set validation = attribute(model._validation, attribute) %}
+    {% include "framework::form.elements." ~ type with
+    {'validation': validation, 'name': attribute, 'model': model, 'error': errors.first(attribute), 'default': default} %}
